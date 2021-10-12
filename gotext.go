@@ -29,7 +29,7 @@ import (
 
 // Global environment variables
 type config struct {
-	*sync.RWMutex
+	sync.RWMutex
 	// Default domain to look at when no domain is specified. Used by package level functions.
 	domain string
 
@@ -44,7 +44,7 @@ type config struct {
 }
 
 // var globalConfig *config
-var configMap map[string]config
+var configMap map[string]*config
 var defaultLang string
 
 func init() {
@@ -55,7 +55,7 @@ func init() {
 	// 	library:  "/usr/local/share/locale",
 	// 	storage:  nil,
 	// }
-	configMap = make(map[string]config)
+	configMap = make(map[string]*config)
 
 	// Register Translator types for gob encoding
 	gob.Register(TranslatorEncoding{})
@@ -150,7 +150,7 @@ func AddConfig(lib, lang, dom string) {
 		library:  lib,
 		language: simplifyLang,
 	}
-	configMap[simplifyLang] = c
+	configMap[simplifyLang] = &c
 	defaultLang = lang
 	loadStorage(simplifyLang)
 }
