@@ -1,8 +1,8 @@
-[![GitHub release](https://img.shields.io/github/release/leonelquinteros/gotext.svg)](https://github.com/leonelquinteros/gotext)
+[![GitHub release](https://img.shields.io/github/release/tanyinloo/gotext.svg)](https://github.com/tanyinloo/gotext)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Gotext build](https://github.com/leonelquinteros/gotext/workflows/Gotext%20build/badge.svg?branch=master)
-[![Go Report Card](https://goreportcard.com/badge/github.com/leonelquinteros/gotext)](https://goreportcard.com/report/github.com/leonelquinteros/gotext)
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/leonelquinteros/gotext)](https://pkg.go.dev/github.com/leonelquinteros/gotext)
+![Gotext build](https://github.com/tanyinloo/gotext/workflows/Gotext%20build/badge.svg?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/tanyinloo/gotext)](https://goreportcard.com/report/github.com/tanyinloo/gotext)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/tanyinloo/gotext)](https://pkg.go.dev/github.com/tanyinloo/gotext)
 
 
 # Gotext
@@ -35,13 +35,13 @@
 
 # Documentation
 
-Refer to the Godoc package documentation at (https://godoc.org/github.com/leonelquinteros/gotext)
+Refer to the Godoc package documentation at (https://godoc.org/github.com/tanyinloo/gotext)
 
 
 # Installation
 
 ```
-go get github.com/leonelquinteros/gotext
+go get github.com/tanyinloo/gotext
 ```
 
 - There are no requirements or dependencies to use this package.
@@ -58,12 +58,12 @@ You can rely on this to use your preferred vendoring tool or to manually retriev
 
 ### Vendoring with [Go Modules](https://github.com/golang/go/wiki/Modules) (Recommended)
 
-Add `github.com/leonelquinteros/gotext` inside the  `require` section in your `go.mod` file.
+Add `github.com/tanyinloo/gotext` inside the  `require` section in your `go.mod` file.
 
 i.e.
 ```
 require (
-    github.com/leonelquinteros/gotext v1.4.0
+    github.com/tanyinloo/gotext v1.4.0
 )
 ```
 
@@ -73,30 +73,30 @@ require (
 To use last stable version (v1.4.0 at the moment of writing)
 
 ```
-dep ensure -add github.com/leonelquinteros/gotext@v1.4.0
+dep ensure -add github.com/tanyinloo/gotext@v1.4.0
 ```
 
 Import as
 
 ```go
-import "github.com/leonelquinteros/gotext"
+import "github.com/tanyinloo/gotext"
 ```
 
 
 ### Vendoring with [gopkg.in](http://labix.org/gopkg.in)
 
-[http://gopkg.in/leonelquinteros/gotext.v1](http://gopkg.in/leonelquinteros/gotext.v1)
+[http://gopkg.in/tanyinloo/gotext.v1](http://gopkg.in/tanyinloo/gotext.v1)
 
 To get the latest v1 package stable release, execute:
 
 ```
-go get gopkg.in/leonelquinteros/gotext.v1
+go get gopkg.in/tanyinloo/gotext.v1
 ```
 
 Import as
 
 ```go
-import "gopkg.in/leonelquinteros/gotext.v1"
+import "gopkg.in/tanyinloo/gotext.v1"
 ```
 
 Refer to it as gotext.
@@ -155,7 +155,7 @@ For quick/simple translations you can use the package level functions directly.
 ```go
 import (
     "fmt"
-    "github.com/leonelquinteros/gotext"
+    "github.com/tanyinloo/gotext"
 )
 
 func main() {
@@ -179,7 +179,7 @@ Use the fmt.Printf syntax (from Go's "fmt" package) to specify how to print the 
 ```go
 import (
     "fmt"
-    "github.com/leonelquinteros/gotext"
+    "github.com/tanyinloo/gotext"
 )
 
 func main() {
@@ -204,7 +204,7 @@ so you can handle each settings on their own.
 ```go
 import (
     "fmt"
-    "github.com/leonelquinteros/gotext"
+    "github.com/tanyinloo/gotext"
 )
 
 func main() {
@@ -241,7 +241,7 @@ you can directly use the Po object to parse it and access the translations in th
 ```go
 import (
     "fmt"
-    "github.com/leonelquinteros/gotext"
+    "github.com/tanyinloo/gotext"
 )
 
 func main() {
@@ -275,7 +275,7 @@ as defined in (https://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_no
 ```go
 import (
     "fmt"
-    "github.com/leonelquinteros/gotext"
+    "github.com/tanyinloo/gotext"
 )
 
 func main() {
@@ -316,4 +316,3 @@ msgstr[1] "This one is the plural: %s"
 - Report issues on Github.
 - Send pull requests for bugfixes and improvements.
 - Send proposals on Github issues.
-

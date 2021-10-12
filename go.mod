@@ -1,4 +1,4 @@
-module github.com/leonelquinteros/gotext
+module github.com/tanyinloo/gotext
 
 // go: no requirements found in Gopkg.lock
 

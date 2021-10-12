@@ -5,7 +5,7 @@ For quick/simple translations you can use the package level functions directly.
 
     import (
 	    "fmt"
-	    "github.com/leonelquinteros/gotext"
+	    "github.com/tanyinloo/gotext"
     )
 
     func main() {
