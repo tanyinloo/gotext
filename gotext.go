@@ -39,6 +39,9 @@ type config struct {
 	language string
 
 	// Path to library directory where all locale directories and Translation files are.
+	path string
+
+	// embedded resource
 	library embed.FS
 
 	// Storage for package level methods
@@ -69,7 +72,7 @@ func loadStorage(force bool) {
 	globalConfig.Lock()
 
 	if globalConfig.storage == nil || force {
-		globalConfig.storage = NewLocale(globalConfig.library, "fixtures", globalConfig.language)
+		globalConfig.storage = NewLocale(globalConfig.library, globalConfig.path, globalConfig.language)
 	}
 
 	if _, ok := globalConfig.storage.Domains[globalConfig.domain]; !ok || force {
@@ -150,9 +153,10 @@ func SetLibrary(lib embed.FS) {
 // It receives the library path, language code and domain name.
 // This function is recommended to be used when changing more than one setting,
 // as using each setter will introduce a I/O overhead because the Translation file will be loaded after each set.
-func Configure(lib embed.FS, lang, dom string) {
+func Configure(lib embed.FS, path, lang, dom string) {
 	globalConfig.Lock()
 	globalConfig.library = lib
+	globalConfig.path = path
 	globalConfig.language = SimplifiedLocale(lang)
 	globalConfig.domain = dom
 	globalConfig.Unlock()
