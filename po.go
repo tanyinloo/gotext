@@ -6,6 +6,7 @@
 package gotext
 
 import (
+	"io/fs"
 	"strconv"
 	"strings"
 )
@@ -19,7 +20,7 @@ Example:
 
 	import (
 		"fmt"
-		"github.com/leonelquinteros/gotext"
+		"github.com/tanyinloo/gotext"
 	)
 
 	func main() {
@@ -117,7 +118,7 @@ func (po *Po) UnmarshalBinary(data []byte) error {
 	return po.domain.UnmarshalBinary(data)
 }
 
-func (po *Po) ParseFile(f string) {
+func (po *Po) ParseFile(f fs.File) {
 	data, err := getFileData(f)
 	if err != nil {
 		return

@@ -1,12 +1,15 @@
 package gotext
 
 import (
+	"embed"
 	"os"
 	"path"
-	"path/filepath"
 	"sync"
 	"testing"
 )
+
+//go:embed fixtures
+var res embed.FS
 
 func TestGettersSetters(t *testing.T) {
 	SetDomain("test")
@@ -16,11 +19,11 @@ func TestGettersSetters(t *testing.T) {
 		t.Errorf("Expected GetDomain to return 'test', but got '%s'", dom)
 	}
 
-	SetLibrary("/tmp/test")
+	SetLibrary(res)
 	lib := GetLibrary()
 
-	if lib != "/tmp/test" {
-		t.Errorf("Expected GetLibrary to return '/tmp/test', but got '%s'", lib)
+	if ar, err := lib.ReadDir("fixtures/ar"); err != nil || len(ar) != 2 {
+		t.Errorf("Expected GetLibrary to return '/tmp/test', but got '%s'", "lib")
 	}
 
 	SetLanguage("es")
@@ -37,7 +40,7 @@ func TestPackageFunctions(t *testing.T) {
 msgid   ""
 msgstr  "Project-Id-Version: %s\n"
         "Report-Msgid-Bugs-To: %s\n"
-        
+
 # Initial comment
 # More Headers below
 "Language: en\n"
@@ -135,7 +138,7 @@ msgstr "Another text on another domain"
 	af.Close()
 
 	// Set package configuration
-	Configure("/tmp", "en_US", "default")
+	Configure(enUSFixture, "en_US", "default")
 
 	// Test translations
 	tr := Get("My text")
@@ -219,7 +222,7 @@ msgstr[1] ""
 	}
 
 	// Set package configuration
-	Configure("/tmp", "en_US", "default")
+	Configure(enUSFixture, "en_US", "default")
 
 	// Test untranslated
 	tr := Get("Untranslated")
@@ -252,9 +255,7 @@ msgstr[1] ""
 }
 
 func TestMoAndPoTranslator(t *testing.T) {
-	fixPath, _ := filepath.Abs("./fixtures/")
-
-	Configure(fixPath, "en_GB", "default")
+	Configure(enUSFixture, "en_GB", "default")
 
 	// Check default domain Translation
 	SetDomain("default")
@@ -344,7 +345,7 @@ msgstr[1] "Custom ctx translations"
 		t.Fatalf("Can't write to test file: %s", err.Error())
 	}
 
-	Configure("/tmp", "en_US", "default")
+	Configure(enUSFixture, "en_US", "default")
 
 	// Check default domain Translation
 	SetDomain("default")
@@ -436,12 +437,12 @@ msgstr "Some random Translation in a context"
 			defer wg.Done()
 
 			GetLibrary()
-			SetLibrary(path.Join("/tmp", "gotextlib"))
+			SetLibrary(enUSFixture)
 			GetDomain()
 			SetDomain("default")
 			GetLanguage()
 			SetLanguage("en_US")
-			Configure("/tmp", "en_US", "default")
+			Configure(enUSFixture, "en_US", "default")
 
 			Get("My text")
 			GetN("One with var: %s", "Several with vars: %s", 0, "test")
@@ -453,7 +454,7 @@ msgstr "Some random Translation in a context"
 }
 
 func TestPackageArabicTranslation(t *testing.T) {
-	Configure("fixtures/", "ar", "categories")
+	Configure(enUSFixture, "ar", "categories")
 
 	// Plurals formula missing + Plural translation string missing
 	tr := GetD("categories", "Alcohol & Tobacco")
@@ -500,7 +501,7 @@ func TestPackageArabicTranslation(t *testing.T) {
 }
 
 func TestPackageArabicMissingPluralForm(t *testing.T) {
-	Configure("fixtures/", "ar", "no_plural_header")
+	Configure(enUSFixture, "ar", "no_plural_header")
 
 	// Get translation
 	tr := GetD("no_plural_header", "Alcohol & Tobacco")

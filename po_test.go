@@ -7,8 +7,6 @@ package gotext
 
 import (
 	"fmt"
-	"os"
-	"path"
 	"testing"
 )
 
@@ -20,11 +18,13 @@ func TestPo_Get(t *testing.T) {
 	// Create po object
 	po := NewPo()
 
-	// Try to parse a directory
-	po.ParseFile(path.Clean(os.TempDir()))
+	f, err := enUSFixture.Open("fixtures/en_US/default.po")
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Parse file
-	po.ParseFile("fixtures/en_US/default.po")
+	po.ParseFile(f)
 
 	// Test translations
 	tr := po.Get("My text")
@@ -40,100 +40,102 @@ func TestPo_Get(t *testing.T) {
 
 func TestPo(t *testing.T) {
 	// Set PO content
-	str := `
-msgid   ""
-msgstr  ""
+	// 	str := `
+	// msgid   ""
+	// msgstr  ""
 
-# Initial comment
-# Headers below
-"Language: en\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+	// # Initial comment
+	// # Headers below
+	// "Language: en\n"
+	// "Content-Type: text/plain; charset=UTF-8\n"
+	// "Content-Transfer-Encoding: 8bit\n"
+	// "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# Some comment
-msgid "My text"
-msgstr "Translated text"
+	// # Some comment
+	// msgid "My text"
+	// msgstr "Translated text"
 
-# More comments
-msgid "Another string"
-msgstr ""
+	// # More comments
+	// msgid "Another string"
+	// msgstr ""
 
-# Multi-line msgid
-msgid ""
-"multi"
-"line"
-"id"
-msgstr "id with multiline content"
+	// # Multi-line msgid
+	// msgid ""
+	// "multi"
+	// "line"
+	// "id"
+	// msgstr "id with multiline content"
 
-# Multi-line msgid_plural
-msgid "" 
-"multi"
-"line"
-"plural"
-"id"
-msgstr "plural id with multiline content"
+	// # Multi-line msgid_plural
+	// msgid ""
+	// "multi"
+	// "line"
+	// "plural"
+	// "id"
+	// msgstr "plural id with multiline content"
 
-#Multi-line string
-msgid "Multi-line"
-msgstr "" 
-"Multi "
-"line"
+	// #Multi-line string
+	// msgid "Multi-line"
+	// msgstr ""
+	// "Multi "
+	// "line"
 
-msgid "One with var: %s"
-msgid_plural "Several with vars: %s"
-msgstr[0] "This one is the singular: %s"
-msgstr[1] "This one is the plural: %s"
-msgstr[2] "And this is the second plural form: %s"
+	// msgid "One with var: %s"
+	// msgid_plural "Several with vars: %s"
+	// msgstr[0] "This one is the singular: %s"
+	// msgstr[1] "This one is the plural: %s"
+	// msgstr[2] "And this is the second plural form: %s"
 
-msgctxt "Ctx"
-msgid "One with var: %s"
-msgid_plural "Several with vars: %s"
-msgstr[0] "This one is the singular in a Ctx context: %s"
-msgstr[1] "This one is the plural in a Ctx context: %s"
+	// msgctxt "Ctx"
+	// msgid "One with var: %s"
+	// msgid_plural "Several with vars: %s"
+	// msgstr[0] "This one is the singular in a Ctx context: %s"
+	// msgstr[1] "This one is the plural in a Ctx context: %s"
 
-msgid "Some random"
-msgstr "Some random Translation"
+	// msgid "Some random"
+	// msgstr "Some random Translation"
 
-msgctxt "Ctx"
-msgid "Some random in a context"
-msgstr "Some random Translation in a context"
+	// msgctxt "Ctx"
+	// msgid "Some random in a context"
+	// msgstr "Some random Translation in a context"
 
-msgid "Empty Translation"
-msgstr ""
+	// msgid "Empty Translation"
+	// msgstr ""
 
-msgid "Empty plural form singular"
-msgid_plural "Empty plural form"
-msgstr[0] "Singular translated"
-msgstr[1] ""
+	// msgid "Empty plural form singular"
+	// msgid_plural "Empty plural form"
+	// msgstr[0] "Singular translated"
+	// msgstr[1] ""
 
-msgid "More"
-msgstr "More Translation"
+	// msgid "More"
+	// msgstr "More Translation"
 
-	`
+	// 	`
 
-	// Write PO content to file
-	filename := path.Clean(os.TempDir() + string(os.PathSeparator) + "default.po")
+	// 	// Write PO content to file
+	// 	filename := path.Clean(os.TempDir() + string(os.PathSeparator) + "default.po")
 
-	f, err := os.Create(filename)
-	if err != nil {
-		t.Fatalf("Can't create test file: %s", err.Error())
-	}
-	defer f.Close()
+	// 	f, err := os.Create(filename)
+	// 	if err != nil {
+	// 		t.Fatalf("Can't create test file: %s", err.Error())
+	// 	}
+	// 	defer f.Close()
 
-	_, err = f.WriteString(str)
-	if err != nil {
-		t.Fatalf("Can't write to test file: %s", err.Error())
-	}
+	// 	_, err = f.WriteString(str)
+	// 	if err != nil {
+	// 		t.Fatalf("Can't write to test file: %s", err.Error())
+	// 	}
 
 	// Create po object
 	po := NewPo()
 
-	// Try to parse a directory
-	po.ParseFile(path.Clean(os.TempDir()))
+	f, err := enUSFixture.Open("fixtures/en_US/default.po")
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Parse file
-	po.ParseFile(filename)
+	po.ParseFile(f)
 
 	// Test translations
 	tr := po.Get("My text")
@@ -246,7 +248,7 @@ msgstr[0] "TR Singular: %s"
 msgstr[1] "TR Plural: %s"
 msgstr[2] "TR Plural 2: %s"
 
-	
+
 `
 	// Create po object
 	po := NewPo()
@@ -276,7 +278,7 @@ msgstr[0] "TR Singular: %s"
 msgstr[1] "TR Plural: %s"
 msgstr[2] "TR Plural 2: %s"
 
-	
+
 `
 	// Create po object
 	po := NewPo()
@@ -571,8 +573,13 @@ func TestNewPoTranslatorRace(t *testing.T) {
 
 	// Parse po content in a goroutine
 	go func(mo Translator, done chan bool) {
+		f, err := enUSFixture.Open("fixtures/en_US/default.po")
+		if err != nil {
+			t.Fatal(err)
+		}
+
 		// Parse file
-		mo.ParseFile("fixtures/en_US/default.po")
+		mo.ParseFile(f)
 		done <- true
 	}(po, pc)
 
@@ -595,8 +602,13 @@ func TestPoBinaryEncoding(t *testing.T) {
 	po := NewPo()
 	po2 := NewPo()
 
+	f, err := enUSFixture.Open("fixtures/en_US/default.po")
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	// Parse file
-	po.ParseFile("fixtures/en_US/default.po")
+	po.ParseFile(f)
 
 	buff, err := po.MarshalBinary()
 	if err != nil {
@@ -625,8 +637,13 @@ func TestPoTextEncoding(t *testing.T) {
 	po := NewPo()
 	po2 := NewPo()
 
+	f, err := enUSFixture.Open("fixtures/en_US/default.po")
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	// Parse file
-	po.ParseFile("fixtures/en_US/default.po")
+	po.ParseFile(f)
 
 	if _, ok := po.Headers["Pot-Creation-Date"]; ok {
 		t.Errorf("Expected non-canonicalised header, got canonicalised")

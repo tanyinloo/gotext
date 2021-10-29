@@ -6,8 +6,6 @@
 package gotext
 
 import (
-	"os"
-	"path"
 	"testing"
 )
 
@@ -15,11 +13,13 @@ func TestMo_Get(t *testing.T) {
 	// Create mo object
 	mo := NewMo()
 
-	// Try to parse a directory
-	mo.ParseFile(path.Clean(os.TempDir()))
+	f, err := enUSFixture.Open("fixtures/en_US/default.mo")
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Parse file
-	mo.ParseFile("fixtures/en_US/default.mo")
+	mo.ParseFile(f)
 
 	// Test translations
 	tr := mo.Get("My text")
@@ -37,11 +37,13 @@ func TestMo(t *testing.T) {
 	// Create mo object
 	mo := NewMo()
 
-	// Try to parse a directory
-	mo.ParseFile(path.Clean(os.TempDir()))
+	f, err := enUSFixture.Open("fixtures/en_US/default.mo")
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Parse file
-	mo.ParseFile("fixtures/en_US/default.mo")
+	mo.ParseFile(f)
 
 	// Test translations
 	tr := mo.Get("My text")
@@ -151,8 +153,12 @@ func TestMoRace(t *testing.T) {
 
 	// Parse po content in a goroutine
 	go func(mo *Mo, done chan bool) {
+		f, err := enUSFixture.Open("fixtures/en_US/default.mo")
+		if err != nil {
+			t.Fatal(err)
+		}
 		// Parse file
-		mo.ParseFile("fixtures/en_US/default.mo")
+		mo.ParseFile(f)
 		done <- true
 	}(mo, pc)
 
@@ -181,8 +187,12 @@ func TestNewMoTranslatorRace(t *testing.T) {
 
 	// Parse po content in a goroutine
 	go func(mo Translator, done chan bool) {
+		f, err := enUSFixture.Open("fixtures/en_US/default.mo")
+		if err != nil {
+			t.Fatal(err)
+		}
 		// Parse file
-		mo.ParseFile("fixtures/en_US/default.mo")
+		mo.ParseFile(f)
 		done <- true
 	}(mo, pc)
 
@@ -205,8 +215,13 @@ func TestMoBinaryEncoding(t *testing.T) {
 	mo := NewMo()
 	mo2 := NewMo()
 
+	f, err := enUSFixture.Open("fixtures/en_US/default.mo")
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	// Parse file
-	mo.ParseFile("fixtures/en_US/default.mo")
+	mo.ParseFile(f)
 
 	buff, err := mo.MarshalBinary()
 	if err != nil {

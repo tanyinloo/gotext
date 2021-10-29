@@ -6,16 +6,16 @@
 package gotext
 
 import (
-	"errors"
+	"fmt"
+	"io/fs"
 	"io/ioutil"
-	"os"
 )
 
 // Translator interface is used by Locale and Po objects.Translator
 // It contains all methods needed to parse translation sources and obtain corresponding translations.
 // Also implements gob.GobEncoder/gob.DobDecoder interfaces to allow serialization of Locale objects.
 type Translator interface {
-	ParseFile(f string)
+	ParseFile(f fs.File)
 	Parse(buf []byte)
 	Get(str string, vars ...interface{}) string
 	GetN(str, plural string, n int, vars ...interface{}) string
@@ -66,17 +66,11 @@ func (te *TranslatorEncoding) GetTranslator() Translator {
 }
 
 //getFileData reads a file and returns the byte slice after doing some basic sanity checking
-func getFileData(f string) ([]byte, error) {
+func getFileData(f fs.File) ([]byte, error) {
 	// Check if file exists
-	info, err := os.Stat(f)
-	if err != nil {
-		return nil, err
+	if f == nil {
+		return nil, fmt.Errorf("file does not exist")
 	}
 
-	// Check that isn't a directory
-	if info.IsDir() {
-		return nil, errors.New("cannot parse a directory")
-	}
-
-	return ioutil.ReadFile(f)
+	return ioutil.ReadAll(f)
 }

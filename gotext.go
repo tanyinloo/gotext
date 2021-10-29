@@ -5,7 +5,7 @@ For quick/simple translations you can use the package level functions directly.
 
     import (
 	    "fmt"
-	    "github.com/leonelquinteros/gotext"
+	    "github.com/tanyinloo/gotext"
     )
 
     func main() {
@@ -23,6 +23,7 @@ For quick/simple translations you can use the package level functions directly.
 package gotext
 
 import (
+	"embed"
 	"encoding/gob"
 	"sync"
 )
@@ -38,11 +39,14 @@ type config struct {
 	language string
 
 	// Path to library directory where all locale directories and Translation files are.
-	library string
+	library embed.FS
 
 	// Storage for package level methods
 	storage *Locale
 }
+
+//go:embed fixtures
+var fixture embed.FS
 
 var globalConfig *config
 
@@ -51,8 +55,8 @@ func init() {
 	globalConfig = &config{
 		domain:   "default",
 		language: "en_US",
-		library:  "/usr/local/share/locale",
 		storage:  nil,
+		library:  fixture,
 	}
 
 	// Register Translator types for gob encoding
@@ -65,7 +69,7 @@ func loadStorage(force bool) {
 	globalConfig.Lock()
 
 	if globalConfig.storage == nil || force {
-		globalConfig.storage = NewLocale(globalConfig.library, globalConfig.language)
+		globalConfig.storage = NewLocale(globalConfig.library, "fixtures", globalConfig.language)
 	}
 
 	if _, ok := globalConfig.storage.Domains[globalConfig.domain]; !ok || force {
@@ -124,7 +128,7 @@ func SetLanguage(lang string) {
 }
 
 // GetLibrary is the library getter for the package configuration
-func GetLibrary() string {
+func GetLibrary() embed.FS {
 	globalConfig.RLock()
 	lib := globalConfig.library
 	globalConfig.RUnlock()
@@ -134,7 +138,7 @@ func GetLibrary() string {
 
 // SetLibrary sets the root path for the loale directories and files to be used at package level.
 // It reloads the corresponding Translation file.
-func SetLibrary(lib string) {
+func SetLibrary(lib embed.FS) {
 	globalConfig.Lock()
 	globalConfig.library = lib
 	globalConfig.Unlock()
@@ -146,7 +150,7 @@ func SetLibrary(lib string) {
 // It receives the library path, language code and domain name.
 // This function is recommended to be used when changing more than one setting,
 // as using each setter will introduce a I/O overhead because the Translation file will be loaded after each set.
-func Configure(lib, lang, dom string) {
+func Configure(lib embed.FS, lang, dom string) {
 	globalConfig.Lock()
 	globalConfig.library = lib
 	globalConfig.language = SimplifiedLocale(lang)

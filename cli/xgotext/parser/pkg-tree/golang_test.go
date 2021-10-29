@@ -1,10 +1,11 @@
 package pkg_tree
 
 import (
-	"github.com/leonelquinteros/gotext/cli/xgotext/parser"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/tanyinloo/gotext/cli/xgotext/parser"
 )
 
 func TestParsePkgTree(t *testing.T) {

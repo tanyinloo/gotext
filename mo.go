@@ -8,6 +8,7 @@ package gotext
 import (
 	"bytes"
 	"encoding/binary"
+	"io/fs"
 )
 
 const (
@@ -31,7 +32,7 @@ Example:
 
 	import (
 		"fmt"
-		"github.com/leonelquinteros/gotext"
+		"github.com/tanyinloo/gotext"
 	)
 
 	func main() {
@@ -91,7 +92,7 @@ func (mo *Mo) UnmarshalBinary(data []byte) error {
 	return mo.domain.UnmarshalBinary(data)
 }
 
-func (mo *Mo) ParseFile(f string) {
+func (mo *Mo) ParseFile(f fs.File) {
 	data, err := getFileData(f)
 	if err != nil {
 		return

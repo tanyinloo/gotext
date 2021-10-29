@@ -10,7 +10,7 @@ import (
 
 	"golang.org/x/text/language"
 
-	"github.com/leonelquinteros/gotext/plurals"
+	"github.com/tanyinloo/gotext/plurals"
 )
 
 // Domain has all the common functions for dealing with a gettext domain

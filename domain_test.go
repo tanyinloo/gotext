@@ -1,9 +1,13 @@
 package gotext
 
-import "testing"
+import (
+	"embed"
+	"testing"
+)
 
-const (
-	enUSFixture = "fixtures/en_US/default.po"
+var (
+	//go:embed fixtures
+	enUSFixture embed.FS
 )
 
 //since both Po and Mo just pass-through to Domain for MarshalBinary and UnmarshalBinary, test it here
@@ -12,8 +16,12 @@ func TestBinaryEncoding(t *testing.T) {
 	po := NewPo()
 	po2 := NewPo()
 
+	f, err := enUSFixture.Open("fixtures/en_US/default.po")
+	if err != nil {
+		t.Fatal(err)
+	}
 	// Parse file
-	po.ParseFile(enUSFixture)
+	po.ParseFile(f)
 
 	buff, err := po.GetDomain().MarshalBinary()
 	if err != nil {
@@ -39,7 +47,12 @@ func TestBinaryEncoding(t *testing.T) {
 
 func TestDomain_GetTranslations(t *testing.T) {
 	po := NewPo()
-	po.ParseFile(enUSFixture)
+
+	f, err := enUSFixture.Open("fixtures/en_US/default.po")
+	if err != nil {
+		t.Fatal(err)
+	}
+	po.ParseFile(f)
 
 	domain := po.GetDomain()
 	all := domain.GetTranslations()

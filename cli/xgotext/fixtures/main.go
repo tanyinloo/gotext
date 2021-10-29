@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/leonelquinteros/gotext"
-	alias "github.com/leonelquinteros/gotext"
-	"github.com/leonelquinteros/gotext/cli/xgotext/fixtures/pkg"
+	"github.com/tanyinloo/gotext"
+	alias "github.com/tanyinloo/gotext"
+	"github.com/tanyinloo/gotext/cli/xgotext/fixtures/pkg"
 )
 
 // Fake object with methods similar to gotext

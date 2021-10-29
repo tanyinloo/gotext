@@ -65,4 +65,4 @@ msgstr[0] "Singular translated"
 msgstr[1] ""
 
 msgid "More"
-msgstr "More translation"
+msgstr "More Translation"

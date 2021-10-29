@@ -83,7 +83,7 @@ msgstr "More Translation"
 	}
 
 	// Create Locale with full language code
-	l := NewLocale("/tmp", "en_US")
+	l := NewLocale(enUSFixture, "/tmp", "en_US")
 
 	// Force nil domain storage
 	l.Domains = nil
@@ -213,7 +213,7 @@ msgstr "More Translation"
 	}
 
 	// Create Locale with full language code
-	l := NewLocale("/tmp", "en_US")
+	l := NewLocale(enUSFixture, "/tmp", "en_US")
 
 	// Force nil domain storage
 	l.Domains = nil
@@ -280,7 +280,7 @@ msgstr "More Translation"
 	}
 
 	// Create Locale with full language code
-	l = NewLocale("/tmp", "golem")
+	l = NewLocale(enUSFixture, "/tmp", "golem")
 
 	// Force nil domain storage
 	l.Domains = nil
@@ -310,7 +310,7 @@ msgstr "More Translation"
 	}
 
 	// Create Locale with full language code
-	l = NewLocale("fixtures/", "fr_FR")
+	l = NewLocale(enUSFixture, "fixtures/", "fr_FR")
 
 	// Force nil domain storage
 	l.Domains = nil
@@ -340,7 +340,7 @@ msgstr "More Translation"
 	}
 
 	// Create Locale with full language code
-	l = NewLocale("fixtures/", "de_DE")
+	l = NewLocale(enUSFixture, "fixtures/", "de_DE")
 
 	// Force nil domain storage
 	l.Domains = nil
@@ -370,7 +370,7 @@ msgstr "More Translation"
 	}
 
 	// Create Locale with full language code
-	l = NewLocale("fixtures/", "de_AT")
+	l = NewLocale(enUSFixture, "fixtures/", "de_AT")
 
 	// Force nil domain storage
 	l.Domains = nil
@@ -446,7 +446,7 @@ msgstr[2] "And this is the second plural form: %s"
 	}
 
 	// Create Locale
-	l := NewLocale("/tmp", "es")
+	l := NewLocale(enUSFixture, "/tmp", "es")
 
 	// Init sync channels
 	ac := make(chan bool)
@@ -476,11 +476,16 @@ func TestAddTranslator(t *testing.T) {
 	// Create po object
 	po := NewPo()
 
+	f, err := enUSFixture.Open("fixtures/en_US/default.po")
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	// Parse file
-	po.ParseFile("fixtures/en_US/default.po")
+	po.ParseFile(f)
 
 	// Create Locale
-	l := NewLocale("", "en")
+	l := NewLocale(enUSFixture, "", "en")
 
 	// Add PO Translator to Locale object
 	l.AddTranslator("default", po)
@@ -499,7 +504,7 @@ func TestAddTranslator(t *testing.T) {
 
 func TestArabicTranslation(t *testing.T) {
 	// Create Locale
-	l := NewLocale("fixtures/", "ar")
+	l := NewLocale(enUSFixture, "fixtures/", "ar")
 
 	// Add domain
 	l.AddDomain("categories")
@@ -551,7 +556,7 @@ func TestArabicTranslation(t *testing.T) {
 
 func TestArabicMissingPluralForm(t *testing.T) {
 	// Create Locale
-	l := NewLocale("fixtures/", "ar")
+	l := NewLocale(enUSFixture, "fixtures/", "ar")
 
 	// Add domain
 	l.AddDomain("no_plural_header")
@@ -565,7 +570,7 @@ func TestArabicMissingPluralForm(t *testing.T) {
 
 func TestLocaleBinaryEncoding(t *testing.T) {
 	// Create Locale
-	l := NewLocale("fixtures/", "en_US")
+	l := NewLocale(enUSFixture, "fixtures/", "en_US")
 	l.AddDomain("default")
 
 	buff, err := l.MarshalBinary()
@@ -603,7 +608,7 @@ func TestLocaleBinaryEncoding(t *testing.T) {
 }
 
 func TestLocale_GetTranslations(t *testing.T) {
-	l := NewLocale("fixtures/", "en_US")
+	l := NewLocale(enUSFixture, "fixtures/", "en_US")
 	l.AddDomain("default")
 
 	all := l.GetTranslations()

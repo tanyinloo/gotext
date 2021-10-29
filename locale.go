@@ -7,8 +7,9 @@ package gotext
 
 import (
 	"bytes"
+	"embed"
 	"encoding/gob"
-	"os"
+	"io/fs"
 	"path"
 	"sync"
 )
@@ -24,7 +25,7 @@ Example:
 	"encoding/gob"
 	"bytes"
 	    "fmt"
-	    "github.com/leonelquinteros/gotext"
+	    "github.com/tanyinloo/gotext"
     )
 
     func main() {
@@ -49,6 +50,9 @@ type Locale struct {
 	// Path to locale files.
 	path string
 
+	// Embeded resource to get files
+	resource embed.FS
+
 	// Language for this Locale
 	lang string
 
@@ -64,40 +68,41 @@ type Locale struct {
 
 // NewLocale creates and initializes a new Locale object for a given language.
 // It receives a path for the i18n .po/.mo files directory (p) and a language code to use (l).
-func NewLocale(p, l string) *Locale {
+func NewLocale(res embed.FS, p, l string) *Locale {
 	return &Locale{
-		path:    p,
-		lang:    SimplifiedLocale(l),
-		Domains: make(map[string]Translator),
+		resource: res,
+		path:     p,
+		lang:     SimplifiedLocale(l),
+		Domains:  make(map[string]Translator),
 	}
 }
 
-func (l *Locale) findExt(dom, ext string) string {
+func (l *Locale) findExt(dom, ext string) fs.File {
 	filename := path.Join(l.path, l.lang, "LC_MESSAGES", dom+"."+ext)
-	if _, err := os.Stat(filename); err == nil {
-		return filename
+	if file, err := l.resource.Open(filename); err == nil {
+		return file
 	}
 
 	if len(l.lang) > 2 {
 		filename = path.Join(l.path, l.lang[:2], "LC_MESSAGES", dom+"."+ext)
-		if _, err := os.Stat(filename); err == nil {
-			return filename
+		if file, err := l.resource.Open(filename); err == nil {
+			return file
 		}
 	}
 
 	filename = path.Join(l.path, l.lang, dom+"."+ext)
-	if _, err := os.Stat(filename); err == nil {
-		return filename
+	if file, err := l.resource.Open(filename); err == nil {
+		return file
 	}
 
 	if len(l.lang) > 2 {
 		filename = path.Join(l.path, l.lang[:2], dom+"."+ext)
-		if _, err := os.Stat(filename); err == nil {
-			return filename
+		if file, err := l.resource.Open(filename); err == nil {
+			return file
 		}
 	}
 
-	return ""
+	return nil
 }
 
 // AddDomain creates a new domain for a given locale object and initializes the Po object.
@@ -106,13 +111,13 @@ func (l *Locale) AddDomain(dom string) {
 	var poObj Translator
 
 	file := l.findExt(dom, "po")
-	if file != "" {
+	if file != nil {
 		poObj = NewPo()
 		// Parse file.
 		poObj.ParseFile(file)
 	} else {
 		file = l.findExt(dom, "mo")
-		if file != "" {
+		if file != nil {
 			poObj = NewMo()
 			// Parse file.
 			poObj.ParseFile(file)
@@ -288,7 +293,6 @@ func (l *Locale) GetTranslations() map[string]*Translation {
 
 // LocaleEncoding is used as intermediary storage to encode Locale objects to Gob.
 type LocaleEncoding struct {
-	Path          string
 	Lang          string
 	Domains       map[string][]byte
 	DefaultDomain string
@@ -307,7 +311,6 @@ func (l *Locale) MarshalBinary() ([]byte, error) {
 		}
 	}
 	obj.Lang = l.lang
-	obj.Path = l.path
 
 	var buff bytes.Buffer
 	encoder := gob.NewEncoder(&buff)
@@ -329,7 +332,6 @@ func (l *Locale) UnmarshalBinary(data []byte) error {
 
 	l.defaultDomain = obj.DefaultDomain
 	l.lang = obj.Lang
-	l.path = obj.Path
 
 	// Decode Domains
 	l.Domains = make(map[string]Translator)
